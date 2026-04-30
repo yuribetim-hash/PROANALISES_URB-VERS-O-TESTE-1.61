@@ -45,13 +45,83 @@ def carregar_tema(caminho="tema.json"):
             "primario_fundo_hover": "#0f8a3a",
             "secundario_fundo": "#0a2a3a",
             "secundario_fundo_hover": "#1a5276",
-            "texto": "#ffffff"
+            "texto": "#ffffff",
+            "borda_radius": "8px",
+            "fonte_peso": "600",
+            "fonte_tamanho": "14px"
+        },
+        "select_box": {
+            "fundo": "#ffffff",
+            "texto": "#1a1a1a",
+            "borda": "#c5d5e6",
+            "borda_radius": "6px",
+            "fonte_tamanho": "14px",
+            "fonte_peso": "normal",
+            "padding": "8px 12px"
+        },
+        "dropdown": {
+            "fundo_janela": "#1a1a2e",
+            "borda_janela": "#2c6b96",
+            "borda_radius_janela": "8px",
+            "sombra_janela": "0 4px 12px rgba(0,0,0,0.3)",
+            "item_fundo_normal": "#1a1a2e",
+            "item_texto_normal": "#ffffff",
+            "item_padding": "8px 16px",
+            "item_fonte_tamanho": "14px",
+            "item_fonte_peso": "normal",
+            "item_hover_fundo": "#2c6b96",
+            "item_hover_texto": "#ffffff",
+            "item_selecionado_fundo": "#0d6e2e",
+            "item_selecionado_texto": "#ffffff"
+        },
+        "inputs": {
+            "fundo": "#ffffff",
+            "texto": "#1a1a1a",
+            "borda": "#c5d5e6",
+            "borda_radius": "6px",
+            "foco_borda": "#1a5276",
+            "foco_sombra": "0 0 0 2px rgba(26, 82, 118, 0.2)",
+            "placeholder_cor": "#888888"
+        },
+        "cards": {
+            "fundo": "#f8fafd",
+            "borda": "#c5d5e6",
+            "borda_radius": "10px",
+            "padding": "12px 16px",
+            "texto": "#1a1a1a",
+            "texto_destaque": "#1a5276"
+        },
+        "metricas": {
+            "fundo": "#f8fafd",
+            "borda": "#c5d5e6",
+            "borda_radius": "8px",
+            "padding": "10px",
+            "label_cor": "#1a5276",
+            "label_peso": "600",
+            "valor_cor": "#1a1a1a",
+            "valor_peso": "700"
+        },
+        "expanders": {
+            "header_fundo": "#f0f4f8",
+            "header_texto": "#1a5276",
+            "header_peso": "600",
+            "header_borda_radius": "8px",
+            "content_fundo": "#ffffff"
+        },
+        "sidebar": {
+            "texto": "#ffffff",
+            "select_fundo": "#2c5a7a",
+            "select_texto": "#ffffff",
+            "input_fundo": "#2c5a7a",
+            "input_texto": "#ffffff"
         },
         "fontes": {
             "titulo_principal": "24px",
             "subtitulo": "20px",
             "texto_normal": "14px",
-            "texto_pequeno": "12px"
+            "texto_pequeno": "12px",
+            "botao": "14px",
+            "label": "14px"
         }
     }
     
@@ -59,7 +129,6 @@ def carregar_tema(caminho="tema.json"):
         try:
             with open(caminho, "r", encoding="utf-8") as f:
                 tema_custom = json.load(f)
-                # Mescla com o tema padrão (preserva valores não informados)
                 for key in tema_padrao:
                     if key in tema_custom:
                         if isinstance(tema_padrao[key], dict):
@@ -141,16 +210,26 @@ css_tema = f"""
         padding: 1rem;
     }}
     
-    /* Sidebar */
+    /* ==================== SIDEBAR ==================== */
     [data-testid="stSidebar"] {{
         background: {tema["cores"]["sidebar_fundo"]};
     }}
     
     [data-testid="stSidebar"] * {{
-        color: {tema["botoes"]["texto"]} !important;
+        color: {tema["sidebar"]["texto"]} !important;
     }}
     
-    /* Títulos principais */
+    [data-testid="stSidebar"] select {{
+        background-color: {tema["sidebar"]["select_fundo"]} !important;
+        color: {tema["sidebar"]["select_texto"]} !important;
+    }}
+    
+    [data-testid="stSidebar"] .stTextInput input {{
+        background-color: {tema["sidebar"]["input_fundo"]} !important;
+        color: {tema["sidebar"]["input_texto"]} !important;
+    }}
+    
+    /* ==================== TÍTULOS ==================== */
     h1 {{
         color: {tema["cores"]["texto_titulo"]} !important;
         font-weight: 700 !important;
@@ -162,37 +241,92 @@ css_tema = f"""
         font-weight: 600 !important;
     }}
     
-    /* Subtítulos */
     .stCaption {{
         color: {tema["cores"]["texto_secundario"]} !important;
     }}
     
-    /* Campos de input */
+    /* ==================== INPUTS E TEXTAREAS ==================== */
     .stTextInput input, .stTextArea textarea, .stNumberInput input {{
-        background-color: {tema["cores"]["fundo_branco"]} !important;
-        color: {tema["cores"]["texto_principal"]} !important;
-        border: 1px solid #c5d5e6 !important;
-        border-radius: 6px !important;
+        background-color: {tema["inputs"]["fundo"]} !important;
+        color: {tema["inputs"]["texto"]} !important;
+        border: 1px solid {tema["inputs"]["borda"]} !important;
+        border-radius: {tema["inputs"]["borda_radius"]} !important;
     }}
     
-    /* Select box */
-    .stSelectbox select {{
-        background-color: {tema["cores"]["fundo_branco"]} !important;
-        color: {tema["cores"]["texto_principal"]} !important;
-        border: 1px solid #c5d5e6 !important;
-        border-radius: 6px !important;
+    .stTextInput input:focus, .stTextArea textarea:focus, .stNumberInput input:focus {{
+        border-color: {tema["inputs"]["foco_borda"]} !important;
+        box-shadow: {tema["inputs"]["foco_sombra"]} !important;
     }}
     
-    /* Labels */
+    textarea::placeholder, input::placeholder {{
+        color: {tema["inputs"]["placeholder_cor"]} !important;
+    }}
+    
+    /* ==================== LABELS ==================== */
     .stTextInput label, .stSelectbox label, .stTextArea label, .stNumberInput label {{
         color: {tema["cores"]["primaria"]} !important;
         font-weight: 600 !important;
+        font-size: {tema["fontes"]["label"]} !important;
     }}
     
-    /* Botões */
+    /* ==================== SELECT BOX (CAIXA FECHADA) ==================== */
+    .stSelectbox select {{
+        background-color: {tema["select_box"]["fundo"]} !important;
+        color: {tema["select_box"]["texto"]} !important;
+        border: 1px solid {tema["select_box"]["borda"]} !important;
+        border-radius: {tema["select_box"]["borda_radius"]} !important;
+        font-size: {tema["select_box"]["fonte_tamanho"]} !important;
+        font-weight: {tema["select_box"]["fonte_peso"]} !important;
+        padding: {tema["select_box"]["padding"]} !important;
+    }}
+    
+    /* ==================== DROPDOWN (JANELA QUE ABRE) ==================== */
+    div[data-baseweb="menu"] {{
+        background-color: {tema["dropdown"]["fundo_janela"]} !important;
+        border: 1px solid {tema["dropdown"]["borda_janela"]} !important;
+        border-radius: {tema["dropdown"]["borda_radius_janela"]} !important;
+        box-shadow: {tema["dropdown"]["sombra_janela"]} !important;
+    }}
+    
+    div[data-baseweb="menu"] div {{
+        background-color: {tema["dropdown"]["item_fundo_normal"]} !important;
+        color: {tema["dropdown"]["item_texto_normal"]} !important;
+        padding: {tema["dropdown"]["item_padding"]} !important;
+        font-size: {tema["dropdown"]["item_fonte_tamanho"]} !important;
+        font-weight: {tema["dropdown"]["item_fonte_peso"]} !important;
+        cursor: pointer !important;
+    }}
+    
+    div[data-baseweb="menu"] div:hover {{
+        background-color: {tema["dropdown"]["item_hover_fundo"]} !important;
+        color: {tema["dropdown"]["item_hover_texto"]} !important;
+    }}
+    
+    div[data-baseweb="menu"] div[aria-selected="true"] {{
+        background-color: {tema["dropdown"]["item_selecionado_fundo"]} !important;
+        color: {tema["dropdown"]["item_selecionado_texto"]} !important;
+    }}
+    
+    /* Scrollbar do dropdown */
+    div[data-baseweb="menu"]::-webkit-scrollbar {{
+        width: 8px;
+    }}
+    
+    div[data-baseweb="menu"]::-webkit-scrollbar-track {{
+        background: #2a2a3e;
+        border-radius: 4px;
+    }}
+    
+    div[data-baseweb="menu"]::-webkit-scrollbar-thumb {{
+        background: {tema["cores"]["secundaria"]};
+        border-radius: 4px;
+    }}
+    
+    /* ==================== BOTÕES ==================== */
     .stButton > button {{
-        border-radius: 8px !important;
-        font-weight: 600 !important;
+        border-radius: {tema["botoes"]["borda_radius"]} !important;
+        font-weight: {tema["botoes"]["fonte_peso"]} !important;
+        font-size: {tema["botoes"]["fonte_tamanho"]} !important;
         color: {tema["botoes"]["texto"]} !important;
         border: none !important;
         transition: all 0.3s ease !important;
@@ -218,7 +352,16 @@ css_tema = f"""
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }}
     
-    /* Progresso */
+    .stButton > button:disabled {{
+        background-color: #cccccc !important;
+        color: #666666 !important;
+    }}
+    
+    .stDownloadButton button {{
+        background-color: {tema["botoes"]["primario_fundo"]} !important;
+    }}
+    
+    /* ==================== PROGRESSO ==================== */
     .progress-wrap {{
         width: 100%;
         background: #e9ecef;
@@ -234,13 +377,13 @@ css_tema = f"""
         transition: width 0.3s ease;
     }}
     
-    /* Status badges - texto escuro com fundo suave */
+    /* ==================== STATUS BADGES ==================== */
     .status-badge-conforme {{
         background-color: {tema["status"]["conforme"]["fundo"]};
         border-left: 4px solid {tema["status"]["conforme"]["borda"]};
-        padding: 10px 12px;
+        padding: 8px 12px;
         border-radius: 6px;
-        margin-top: 8px;
+        margin-top: 28px;
         color: {tema["status"]["conforme"]["texto"]};
         font-weight: 600;
     }}
@@ -248,9 +391,9 @@ css_tema = f"""
     .status-badge-inconforme {{
         background-color: {tema["status"]["inconforme"]["fundo"]};
         border-left: 4px solid {tema["status"]["inconforme"]["borda"]};
-        padding: 10px 12px;
+        padding: 8px 12px;
         border-radius: 6px;
-        margin-top: 8px;
+        margin-top: 28px;
         color: {tema["status"]["inconforme"]["texto"]};
         font-weight: 600;
     }}
@@ -258,9 +401,9 @@ css_tema = f"""
     .status-badge-pendente {{
         background-color: {tema["status"]["pendente"]["fundo"]};
         border-left: 4px solid {tema["status"]["pendente"]["borda"]};
-        padding: 10px 12px;
+        padding: 8px 12px;
         border-radius: 6px;
-        margin-top: 8px;
+        margin-top: 28px;
         color: {tema["status"]["pendente"]["texto"]};
         font-weight: 600;
     }}
@@ -268,89 +411,72 @@ css_tema = f"""
     .status-badge-na {{
         background-color: {tema["status"]["nao_se_enquadra"]["fundo"]};
         border-left: 4px solid {tema["status"]["nao_se_enquadra"]["borda"]};
-        padding: 10px 12px;
+        padding: 8px 12px;
         border-radius: 6px;
-        margin-top: 8px;
+        margin-top: 28px;
         color: {tema["status"]["nao_se_enquadra"]["texto"]};
         font-weight: 600;
     }}
     
-    /* Cards */
+    /* ==================== CARDS ==================== */
     .card {{
-        padding: 0.8rem 1rem;
-        border: 1px solid #c5d5e6;
-        border-radius: 10px;
-        background: {tema["cores"]["fundo_claro"]};
+        padding: {tema["cards"]["padding"]};
+        border: 1px solid {tema["cards"]["borda"]};
+        border-radius: {tema["cards"]["borda_radius"]};
+        background: {tema["cards"]["fundo"]};
         margin-bottom: 0.6rem;
-        color: {tema["cores"]["texto_principal"]};
+        color: {tema["cards"]["texto"]};
     }}
     
-    /* DROPDOWN */
-    div[data-baseweb="menu"] {{
-        background-color: #1a1a2e !important;
-        border: 1px solid #2c6b96 !important;
-        border-radius: 8px !important;
+    .card b, .card strong {{
+        color: {tema["cards"]["texto_destaque"]};
     }}
     
-    div[data-baseweb="menu"] div {{
-        background-color: #1a1a2e !important;
-        color: white !important;
-        padding: 8px 16px !important;
-    }}
-    
-    div[data-baseweb="menu"] div:hover {{
-        background-color: #2c6b96 !important;
-        color: white !important;
-    }}
-    
-    div[data-baseweb="menu"] div[aria-selected="true"] {{
-        background-color: #0d6e2e !important;
-        color: white !important;
-    }}
-    
-    hr {{
-        border-color: #c5d5e6 !important;
-    }}
-    
-    /* Textos em geral */
-    p, li, .stMarkdown, .stText {{
-        color: {tema["cores"]["texto_secundario"]};
-    }}
-    
-    /* Informações e avisos */
-    .stInfo, .stSuccess, .stWarning, .stError {{
-        border-radius: 8px !important;
-    }}
-    
-    /* Métricas */
+    /* ==================== MÉTRICAS ==================== */
     [data-testid="stMetric"] {{
-        background-color: {tema["cores"]["fundo_claro"]};
-        border-radius: 8px;
-        padding: 10px;
-        border: 1px solid #c5d5e6;
+        background-color: {tema["metricas"]["fundo"]};
+        border-radius: {tema["metricas"]["borda_radius"]};
+        padding: {tema["metricas"]["padding"]};
+        border: 1px solid {tema["metricas"]["borda"]};
     }}
     
     [data-testid="stMetric"] label {{
-        color: {tema["cores"]["primaria"]} !important;
-        font-weight: 600 !important;
+        color: {tema["metricas"]["label_cor"]} !important;
+        font-weight: {tema["metricas"]["label_peso"]} !important;
     }}
     
     [data-testid="stMetric"] .stMetricValue {{
-        color: {tema["cores"]["texto_principal"]} !important;
-        font-weight: 700 !important;
+        color: {tema["metricas"]["valor_cor"]} !important;
+        font-weight: {tema["metricas"]["valor_peso"]} !important;
     }}
     
-    /* Expanders */
+    /* ==================== EXPANDERS ==================== */
     .streamlit-expanderHeader {{
-        background-color: {tema["cores"]["fundo_claro"]} !important;
-        color: {tema["cores"]["primaria"]} !important;
-        font-weight: 600 !important;
-        border-radius: 8px !important;
+        background-color: {tema["expanders"]["header_fundo"]} !important;
+        color: {tema["expanders"]["header_texto"]} !important;
+        font-weight: {tema["expanders"]["header_peso"]} !important;
+        border-radius: {tema["expanders"]["header_borda_radius"]} !important;
     }}
     
     .streamlit-expanderContent {{
-        background-color: {tema["cores"]["fundo_branco"]} !important;
+        background-color: {tema["expanders"]["content_fundo"]} !important;
         border-radius: 0 0 8px 8px !important;
+    }}
+    
+    /* ==================== TEXTOS GERAIS ==================== */
+    p, li, .stMarkdown, .stText {{
+        color: {tema["cores"]["texto_secundario"]};
+        font-size: {tema["fontes"]["texto_normal"]};
+    }}
+    
+    /* ==================== DIVISORES ==================== */
+    hr {{
+        border-color: {tema["select_box"]["borda"]} !important;
+    }}
+    
+    /* ==================== MENSAGENS ==================== */
+    .stInfo, .stSuccess, .stWarning, .stError {{
+        border-radius: 8px !important;
     }}
 </style>
 """
@@ -1028,10 +1154,10 @@ elif st.session_state["etapa"] == "4. Revisão":
             st.markdown(f"#### {grupo}")
             for i, item in enumerate(itens, start=1):
                 st.markdown(f"""
-                <div style="background-color: #f8fafd; border: 1px solid #c5d5e6; 
-                            border-radius: 10px; padding: 12px 16px; margin: 8px 0;">
-                    <b style="color: #1a5276;">{i}.</b> 
-                    <span style="color: #1a1a1a;">{item.replace(chr(10), '<br>')}</span>
+                <div style="background-color: {tema["cards"]["fundo"]}; border: 1px solid {tema["cards"]["borda"]}; 
+                            border-radius: {tema["cards"]["borda_radius"]}; padding: {tema["cards"]["padding"]}; margin: 8px 0;">
+                    <b style="color: {tema["cards"]["texto_destaque"]};">{i}.</b> 
+                    <span style="color: {tema["cards"]["texto"]};">{item.replace(chr(10), '<br>')}</span>
                 </div>
                 """, unsafe_allow_html=True)
     else:
@@ -1072,9 +1198,11 @@ elif st.session_state["etapa"] == "5. Gerar parecer":
         st.write(f"**📌 Protocolo:** {dados['protocolo']}")
         st.write(f"**👤 Requerente:** {dados['interessado']}")
         st.write(f"**🏢 Tipo:** {dados['tipo']}")
+        st.write(f"**📋 Matrícula(s):** {dados['matriculas']}")
     with col2:
         st.write(f"**🔢 Nº Lotes:** {dados['n_lotes']}")
         st.write(f"**👨‍💼 Analista:** {st.session_state.get('analista', '')}")
+        st.write(f"**🔢 Matrícula Analista:** {st.session_state.get('matricula_analista', '')}")
         st.write(f"**🔍 Nº Análise:** {st.session_state.get('n_analise', '')}")
     
     if conclusao == "FAVORÁVEL":
