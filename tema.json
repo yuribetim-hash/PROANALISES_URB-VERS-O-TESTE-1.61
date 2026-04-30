@@ -1,7 +1,15 @@
 {
+    "_instrucoes_": {
+        "uso": "Edite este arquivo para personalizar as cores da aplicação",
+        "como_aplicar": "Após editar, salve o arquivo e recarregue a página Streamlit",
+        "cores_hex": "Use códigos hexadecimais como #ffffff, #1a5276 ou nomes como 'white', 'black'",
+        "gradientes": "Use formato: linear-gradient(direcao, cor1, cor2, ...)"
+    },
+    
     "cores": {
+        "_comentario": "Cores principais da aplicação",
         "primaria": "#0a2a3a",
-        "primaria_clara": "#1a5276",
+        "primaria_clara": "#1a5276", 
         "primaria_muito_escura": "#051a24",
         "secundaria": "#2c6b96",
         "sucesso": "#0d6e2e",
@@ -16,7 +24,9 @@
         "fundo_app": "linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%)",
         "sidebar_fundo": "linear-gradient(180deg, #0a2a3a 0%, #051a24 100%)"
     },
+    
     "status": {
+        "_comentario": "Cores dos badges de status na tela de análise",
         "conforme": {
             "fundo": "#ecfdf3",
             "borda": "#067647",
@@ -42,17 +52,123 @@
             "icone": "ℹ️"
         }
     },
+    
     "botoes": {
-        "primario_fundo": "#1a5276",
+        "_comentario": "Configurações dos botões da aplicação",
+        "primario_fundo": "#0d6e2e",
         "primario_fundo_hover": "#0f8a3a",
         "secundario_fundo": "#0a2a3a",
         "secundario_fundo_hover": "#1a5276",
-        "texto": "#ffffff"
+        "texto": "#ffffff",
+        "borda_radius": "8px",
+        "fonte_peso": "600",
+        "fonte_tamanho": "14px"
     },
+    
+    "select_box": {
+        "_comentario": "Configurações da caixa de seleção (campo fechado)",
+        "fundo": "#ffffff",
+        "texto": "#1a1a1a",
+        "borda": "#c5d5e6",
+        "borda_radius": "6px",
+        "fonte_tamanho": "14px",
+        "fonte_peso": "normal",
+        "padding": "8px 12px"
+    },
+    
+    "dropdown": {
+        "_comentario": "Configurações da janela que ABRE ao clicar na caixa de seleção",
+        "_explicacao": "Esta é a janela flutuante com as opções de escolha",
+        "fundo_janela": "#1a1a2e",
+        "borda_janela": "#2c6b96",
+        "borda_radius_janela": "8px",
+        "sombra_janela": "0 4px 12px rgba(0,0,0,0.3)",
+        "item_fundo_normal": "#1a1a2e",
+        "item_texto_normal": "#ffffff",
+        "item_padding": "8px 16px",
+        "item_fonte_tamanho": "14px",
+        "item_fonte_peso": "normal",
+        "item_hover_fundo": "#2c6b96",
+        "item_hover_texto": "#ffffff",
+        "item_selecionado_fundo": "#0d6e2e",
+        "item_selecionado_texto": "#ffffff"
+    },
+    
+    "inputs": {
+        "_comentario": "Configurações dos campos de texto e área de texto",
+        "fundo": "#ffffff",
+        "texto": "#1a1a1a",
+        "borda": "#c5d5e6",
+        "borda_radius": "6px",
+        "foco_borda": "#1a5276",
+        "foco_sombra": "0 0 0 2px rgba(26, 82, 118, 0.2)",
+        "placeholder_cor": "#888888"
+    },
+    
+    "cards": {
+        "_comentario": "Configurações dos cards de inconformidades",
+        "fundo": "#f8fafd",
+        "borda": "#c5d5e6",
+        "borda_radius": "10px",
+        "padding": "12px 16px",
+        "texto": "#1a1a1a",
+        "texto_destaque": "#1a5276"
+    },
+    
+    "metricas": {
+        "_comentario": "Configurações das métricas na tela de revisão",
+        "fundo": "#f8fafd",
+        "borda": "#c5d5e6",
+        "borda_radius": "8px",
+        "padding": "10px",
+        "label_cor": "#1a5276",
+        "label_peso": "600",
+        "valor_cor": "#1a1a1a",
+        "valor_peso": "700"
+    },
+    
+    "expanders": {
+        "_comentario": "Configurações dos grupos expansíveis (acordeões)",
+        "header_fundo": "#f0f4f8",
+        "header_texto": "#1a5276",
+        "header_peso": "600",
+        "header_borda_radius": "8px",
+        "content_fundo": "#ffffff"
+    },
+    
+    "sidebar": {
+        "_comentario": "Configurações específicas da barra lateral",
+        "texto": "#ffffff",
+        "select_fundo": "#2c5a7a",
+        "select_texto": "#ffffff",
+        "input_fundo": "#2c5a7a",
+        "input_texto": "#ffffff"
+    },
+    
     "fontes": {
+        "_comentario": "Tamanhos de fonte da aplicação",
         "titulo_principal": "24px",
         "subtitulo": "20px",
         "texto_normal": "14px",
-        "texto_pequeno": "12px"
+        "texto_pequeno": "12px",
+        "botao": "14px",
+        "label": "14px"
+    },
+    
+    "_exemplos_cores_uteis": {
+        "azul_escuro": "#0a2a3a",
+        "azul_medio": "#1a5276",
+        "azul_claro": "#2c6b96",
+        "azul_muito_claro": "#e8f0fe",
+        "verde_sucesso": "#0d6e2e",
+        "verde_claro": "#ecfdf3",
+        "vermelho_erro": "#b42318",
+        "vermelho_claro": "#fef3f2",
+        "laranja_alerta": "#b54708",
+        "laranja_claro": "#fffaeb",
+        "cinza_claro": "#f8fafd",
+        "cinza_borda": "#c5d5e6",
+        "preto_texto": "#1a1a1a",
+        "cinza_texto": "#2c3e50"
     }
 }
