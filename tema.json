@@ -43,7 +43,7 @@
         }
     },
     "botoes": {
-        "primario_fundo": "#0d6e2e",
+        "primario_fundo": "#1a5276",
         "primario_fundo_hover": "#0f8a3a",
         "secundario_fundo": "#0a2a3a",
         "secundario_fundo_hover": "#1a5276",
