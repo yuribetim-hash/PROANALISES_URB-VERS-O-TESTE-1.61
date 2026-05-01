@@ -340,13 +340,6 @@ if not st.session_state["logado"]:
 # -------------------------
 # SIDEBAR
 # -------------------------
-# Logo na sidebar
-if os.path.exists("logo.png"):
-    st.sidebar.image("logo.png", width=150)
-elif os.path.exists("logo.jpg"):
-    st.sidebar.image("logo.jpg", width=150)
-elif os.path.exists("logo.svg"):
-    st.sidebar.image("logo.svg", width=150)
 
 st.sidebar.title("📐 Proanalises v1.61")
 st.sidebar.write(f"👤 {st.session_state['usuario']}")
