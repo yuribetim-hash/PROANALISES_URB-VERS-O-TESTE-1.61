@@ -305,7 +305,7 @@ def carregar_usuarios(caminho="usuarios.txt"):
 def tela_login():
 
 # Carregar logo
-if os.path.exists("logo.png"):
+    if os.path.exists("logo.png"):
     st.image("logo.png", width=150)  # Ajuste o tamanho conforme necessário
    
     st.title("📐 Proanalise v1.61")
@@ -338,8 +338,9 @@ if not st.session_state["logado"]:
 if os.path.exists("logo.png"):
     st.sidebar.image("logo.png", width=150)
 
-st.sidebar.title("📐 Proanalise v1.61")
+st.sidebar.title("📐 Proanalises v1.61")
 st.sidebar.write(f"👤 {st.session_state['usuario']}")
+
 if st.sidebar.button("🚪 Sair", use_container_width=True, key="btn_sair"):
     st.session_state["logado"] = False
     st.session_state.pop("dados_antigos", None)
@@ -631,13 +632,15 @@ def inicializar_estados():
 inicializar_estados()
 
 # -------------------------
-# CABEÇALHO PRINCIPAL
-# -------------------------
+# ==================== CABEÇALHO PRINCIPAL ====================
+# Layout com logo e título lado a lado
 col_logo, col_titulo = st.columns([1, 5])
 
 with col_logo:
     if os.path.exists("logo.png"):
-        st.image("logo.png", width=80)  # Logo menor na interface principal
+        st.image("logo.png", width=100)
+    else:
+        st.write("")  # Espaço vazio se não houver logo
 
 with col_titulo:
     st.title("📐 Proanalises v1.61")
