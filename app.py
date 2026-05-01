@@ -303,6 +303,11 @@ def carregar_usuarios(caminho="usuarios.txt"):
     return usuarios
 
 def tela_login():
+
+# Carregar logo
+    if os.path.exists("logo.png"):
+    st.image("logo.png", width=150)  # Ajuste o tamanho conforme necessário
+   
     st.title("📐 Proanalise v1.61")
     st.caption("Sistema de análise urbanística e geração de parecer técnico")
     col1, col2, col3 = st.columns([1, 1.2, 1])
@@ -329,6 +334,10 @@ if not st.session_state["logado"]:
 # -------------------------
 # SIDEBAR
 # -------------------------
+# Logo na sidebar
+if os.path.exists("logo.png"):
+    st.sidebar.image("logo.png", width=150)
+
 st.sidebar.title("📐 Proanalise v1.61")
 st.sidebar.write(f"👤 {st.session_state['usuario']}")
 if st.sidebar.button("🚪 Sair", use_container_width=True, key="btn_sair"):
@@ -624,6 +633,15 @@ inicializar_estados()
 # -------------------------
 # CABEÇALHO PRINCIPAL
 # -------------------------
+col_logo, col_titulo = st.columns([1, 5])
+
+with col_logo:
+    if os.path.exists("logo.png"):
+        st.image("logo.png", width=80)  # Logo menor na interface principal
+
+with col_titulo:
+    st.title("📐 Proanalises v1.61")
+    st.caption("Análise urbanística padronizada com geração de parecer técnico")
 st.title("📐 Proanalise v1.61")
 st.caption("Análise urbanística padronizada com geração de parecer técnico")
 
