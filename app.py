@@ -711,146 +711,41 @@ elif st.session_state["etapa"] == "2. Analista":
             else:
                 st.error("⚠️ Preencha todos os campos")
 
-# ==================== ETAPA 3 - ANÁLISE ====================
-elif st.session_state["etapa"] == "3. Análise":
-    st.header("🔍 Análise técnica")
-    st.info(f"📌 Protocolo: **{st.session_state['protocolo']}** | Analista: **{st.session_state['analista']}** | Análise Nº: **{st.session_state['n_analise']}**")
-
-    # Recuperar respostas salvas ou inicializar
+def inicializar_estados():
+    if "dados_antigos" not in st.session_state:
+        st.session_state["dados_antigos"] = None
+    if "etapa" not in st.session_state:
+        st.session_state["etapa"] = "1. Protocolo"
+    if "protocolo" not in st.session_state:
+        st.session_state["protocolo"] = ""
+    if "tipo" not in st.session_state:
+        st.session_state["tipo"] = "Loteamento"
+    if "interessado" not in st.session_state:
+        st.session_state["interessado"] = ""
+    if "n_lotes" not in st.session_state:
+        st.session_state["n_lotes"] = 1
+    if "matriculas" not in st.session_state:
+        st.session_state["matriculas"] = ""
+    if "analista" not in st.session_state:
+        st.session_state["analista"] = ""
+    if "matricula_analista" not in st.session_state:
+        st.session_state["matricula_analista"] = ""
+    if "setor" not in st.session_state:
+        st.session_state["setor"] = ""
+    if "n_analise" not in st.session_state:
+        st.session_state["n_analise"] = ""
+    if "pendencias_manuais" not in st.session_state:
+        st.session_state["pendencias_manuais"] = {}
+    if "respostas_temp" not in st.session_state:
+        st.session_state["respostas_temp"] = {}
+    if "observacoes_temp" not in st.session_state:
+        st.session_state["observacoes_temp"] = {}
     if "respostas_analise" not in st.session_state:
-        st.session_state["respostas_analise"] = st.session_state.get("respostas_temp", {})
+        st.session_state["respostas_analise"] = {}
     if "observacoes_analise" not in st.session_state:
-        st.session_state["observacoes_analise"] = st.session_state.get("observacoes_temp", {})
+        st.session_state["observacoes_analise"] = {}
     if "pendencias_analise" not in st.session_state:
-        st.session_state["pendencias_analise"] = st.session_state.get("pendencias_manuais", {})
-
-    respostas = st.session_state["respostas_analise"]
-    observacoes = st.session_state["observacoes_analise"]
-    pendencias_manuais = st.session_state["pendencias_analise"]
-    
-    # ORDEM CORRETA DOS GRUPOS
-    ordem_grupos = ["Pré-análise", "Documental", "Viabilidades", "Análise Urbanística", "Análise Geo", "Documentos Finais"]
-    grupos_existentes = list(set(p["grupo"] for p in perguntas))
-    grupos_ordenados = [g for g in ordem_grupos if g in grupos_existentes]
-    
-    inconformes_sidebar = []
-
-    for grupo in grupos_ordenados:
-        perguntas_grupo = [p for p in perguntas if p["grupo"] == grupo]
-        with st.expander(f"📁 {grupo}", expanded=False):
-            for idx, p in enumerate(perguntas_grupo):
-                pid = p["id"]
-                chave_resp = f"resp_{pid}"
-                chave_obs = f"obs_{pid}"
-                
-                # Carregar valores salvos
-                valor_salvo = respostas.get(pid, "Selecione...")
-                obs_salva = observacoes.get(pid, "")
-                
-                # Verificar se tem valor do histórico
-                if st.session_state["dados_antigos"] and pid not in respostas:
-                    valor_salvo = st.session_state["dados_antigos"]["respostas"].get(pid, "Selecione...")
-                    if valor_salvo not in p["opcoes"] and valor_salvo != "Selecione...":
-                        valor_salvo = "Selecione..."
-                    obs_salva = st.session_state["dados_antigos"]["observacoes"].get(pid, "")
-                
-                opcoes = ["Selecione..."] + p["opcoes"]
-                idx_padrao = opcoes.index(valor_salvo) if valor_salvo in opcoes else 0
-                
-                col_pergunta, col_status = st.columns([3, 1])
-                with col_pergunta:
-                    resposta = st.selectbox(p["pergunta"], opcoes, index=idx_padrao, key=chave_resp, help=f"ID: {pid}")
-                    respostas[pid] = resposta
-                with col_status:
-                    status = resumo_status_pergunta(p, resposta)
-                    render_status_badge(status)
-                    if status == "inconforme":
-                        inconformes_sidebar.append(p["pergunta"])
-                
-                obs = st.text_area("📝 Observação (opcional)", value=obs_salva, key=chave_obs, height=68,
-                                   placeholder="Registre detalhes adicionais sobre esta resposta...")
-                observacoes[pid] = obs
-                st.markdown("---")
-            
-            # Inconformidades Diversas
-            st.markdown("### 📝 Inconformidades Diversas")
-            st.caption("Registre aqui quaisquer inconformidades adicionais não cobertas pelas perguntas acima")
-            
-            if grupo not in pendencias_manuais:
-                pendencias_manuais[grupo] = []
-            elif not isinstance(pendencias_manuais[grupo], list):
-                if pendencias_manuais[grupo] and pendencias_manuais[grupo].strip():
-                    pendencias_manuais[grupo] = [pendencias_manuais[grupo]]
-                else:
-                    pendencias_manuais[grupo] = []
-            
-            # Exibir inconformidades existentes
-            if pendencias_manuais[grupo]:
-                for i, pendencia in enumerate(pendencias_manuais[grupo]):
-                    if pendencia and pendencia.strip():
-                        col_pend, col_btn = st.columns([10, 1])
-                        with col_pend:
-                            st.markdown(f"""
-                            <div style="background-color: #fff3e0; border-left: 4px solid #ff9800; 
-                                        padding: 10px; margin: 5px 0; border-radius: 5px;">
-                                <strong>Inconformidade {i+1}:</strong> {pendencia}
-                            </div>
-                            """, unsafe_allow_html=True)
-                        with col_btn:
-                            if st.button("🗑️", key=f"remove_{grupo}_{i}"):
-                                pendencias_manuais[grupo].pop(i)
-                                st.rerun()
-            
-            # Botão adicionar
-            if st.button(f"+ Adicionar Inconformidade Diversa", key=f"add_{grupo}", use_container_width=True):
-                pendencias_manuais[grupo].append("")
-                st.rerun()
-            
-            # Campo para nova inconformidade
-            if pendencias_manuais[grupo] and not pendencias_manuais[grupo][-1]:
-                nova = st.text_area("Nova inconformidade", key=f"new_{grupo}", height=80,
-                                    placeholder="Descreva a inconformidade encontrada...")
-                if nova and nova.strip():
-                    pendencias_manuais[grupo][-1] = nova
-                    st.rerun()
-            
-            for pendencia in pendencias_manuais[grupo]:
-                if pendencia and pendencia.strip():
-                    inconformes_sidebar.append(f"{grupo} - Inconformidade Diversa")
-            
-            st.markdown("---")
-    
-    # Salvar estados
-    st.session_state["respostas_analise"] = respostas
-    st.session_state["observacoes_analise"] = observacoes
-    st.session_state["pendencias_analise"] = pendencias_manuais
-    
-    preenchidas, total, pct = progresso_percentual(respostas)
-    render_progresso(preenchidas, total, pct, st)
-    
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### 📊 Progresso")
-    render_progresso(preenchidas, total, pct, st.sidebar)
-    st.sidebar.markdown("### ⚠️ Inconformidades")
-    if inconformes_sidebar:
-        for item in inconformes_sidebar[:20]:
-            st.sidebar.write(f"- {item}")
-    else:
-        st.sidebar.write("Nenhuma até o momento.")
-    
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        if st.button("← Voltar", use_container_width=True):
-            st.session_state["etapa"] = "2. Analista"
-            st.rerun()
-    with col2:
-        if st.button("Prosseguir para revisão →", use_container_width=True, type="primary"):
-            st.session_state["respostas_temp"] = respostas
-            st.session_state["observacoes_temp"] = observacoes
-            st.session_state["pendencias_manuais"] = pendencias_manuais
-            st.session_state["etapa"] = "4. Revisão"
-            st.rerun()
-
+        st.session_state["pendencias_analise"] = {}
 # ==================== ETAPA 4 - REVISÃO ====================
 elif st.session_state["etapa"] == "4. Revisão":
     st.header("📋 Revisão da análise")
