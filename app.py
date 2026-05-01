@@ -6,7 +6,7 @@ from datetime import datetime
 from docxtpl import DocxTemplate, RichText
 
 st.set_page_config(
-    page_title="Proanalises v1.61",
+    page_title="Proanalise v1.61",
     page_icon="📐",
     layout="wide"
 )
@@ -310,7 +310,7 @@ def tela_login():
         elif os.path.exists("logo.jpg"):
             st.image("logo.jpg", width=200)
     
-    st.title("📐 Proanalises v1.61")
+    st.title("📐 Proanalise v1.61")
     st.caption("Sistema de análise urbanística e geração de parecer técnico")
     
     col1, col2, col3 = st.columns([1, 1.2, 1])
@@ -339,7 +339,7 @@ if not st.session_state["logado"]:
 # -------------------------
 
 
-st.sidebar.title("📐 Proanalises v1.61")
+st.sidebar.title("📐 Proanalise v1.61")
 st.sidebar.write(f"👤 {st.session_state['usuario']}")
 
 if st.sidebar.button("🚪 Sair", use_container_width=True, key="btn_sair"):
@@ -642,7 +642,7 @@ with col_logo:
     else:
         st.write("")
 with col_titulo:
-    st.title("📐 Proanalises v1.61")
+    st.title("📐 Proanalise v1.61")
     st.caption("Análise urbanística padronizada com geração de parecer técnico")
 
 etapas = ["1. Protocolo", "2. Analista", "3. Análise", "4. Revisão", "5. Gerar parecer"]
