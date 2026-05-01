@@ -6,7 +6,7 @@ from datetime import datetime
 from docxtpl import DocxTemplate, RichText
 
 st.set_page_config(
-    page_title="Proanalise v1.61",
+    page_title="Proanalises v1.61",
     page_icon="📐",
     layout="wide"
 )
@@ -303,13 +303,19 @@ def carregar_usuarios(caminho="usuarios.txt"):
     return usuarios
 
 def tela_login():
-
-# Carregar logo
-    if os.path.exists("logo.png"):
-    st.image("logo.png", width=150)  # Ajuste o tamanho conforme necessário
-   
-    st.title("📐 Proanalise v1.61")
+    # Logo na tela de login
+    col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
+    with col_logo2:
+        if os.path.exists("logo.png"):
+            st.image("logo.png", width=200)
+        elif os.path.exists("logo.jpg"):
+            st.image("logo.jpg", width=200)
+        elif os.path.exists("logo.svg"):
+            st.image("logo.svg", width=200)
+    
+    st.title("📐 Proanalises v1.61")
     st.caption("Sistema de análise urbanística e geração de parecer técnico")
+    
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         st.markdown("### Acesso ao sistema")
@@ -337,6 +343,10 @@ if not st.session_state["logado"]:
 # Logo na sidebar
 if os.path.exists("logo.png"):
     st.sidebar.image("logo.png", width=150)
+elif os.path.exists("logo.jpg"):
+    st.sidebar.image("logo.jpg", width=150)
+elif os.path.exists("logo.svg"):
+    st.sidebar.image("logo.svg", width=150)
 
 st.sidebar.title("📐 Proanalises v1.61")
 st.sidebar.write(f"👤 {st.session_state['usuario']}")
@@ -631,7 +641,6 @@ def inicializar_estados():
 
 inicializar_estados()
 
-# -------------------------
 # ==================== CABEÇALHO PRINCIPAL ====================
 # Layout com logo e título lado a lado
 col_logo, col_titulo = st.columns([1, 5])
@@ -639,14 +648,16 @@ col_logo, col_titulo = st.columns([1, 5])
 with col_logo:
     if os.path.exists("logo.png"):
         st.image("logo.png", width=100)
+    elif os.path.exists("logo.jpg"):
+        st.image("logo.jpg", width=100)
+    elif os.path.exists("logo.svg"):
+        st.image("logo.svg", width=100)
     else:
-        st.write("")  # Espaço vazio se não houver logo
+        st.write("")
 
 with col_titulo:
     st.title("📐 Proanalises v1.61")
     st.caption("Análise urbanística padronizada com geração de parecer técnico")
-st.title("📐 Proanalise v1.61")
-st.caption("Análise urbanística padronizada com geração de parecer técnico")
 
 etapas = ["1. Protocolo", "2. Analista", "3. Análise", "4. Revisão", "5. Gerar parecer"]
 etapa_atual = st.sidebar.radio("📋 Etapas", etapas, index=etapas.index(st.session_state["etapa"]))
