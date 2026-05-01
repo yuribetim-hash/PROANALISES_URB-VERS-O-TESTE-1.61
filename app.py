@@ -981,50 +981,77 @@ elif st.session_state["etapa"] == "5. Gerar parecer":
     
     conclusao = definir_conclusao(respostas, pendencias_manuais)
     
+    # Exibir dados do parecer
+    st.subheader("📋 Dados do Parecer")
     col1, col2 = st.columns(2)
     with col1:
         st.write(f"**📌 Protocolo:** {dados['protocolo']}")
         st.write(f"**👤 Requerente:** {dados['interessado']}")
         st.write(f"**🏢 Tipo:** {dados['tipo']}")
-        st.write(f"**📋 Matrícula(s):** {dados['matriculas']}")
     with col2:
         st.write(f"**🔢 Nº Lotes:** {dados['n_lotes']}")
         st.write(f"**👨‍💼 Analista:** {st.session_state.get('analista', '')}")
-        st.write(f"**🔢 Matrícula Analista:** {st.session_state.get('matricula_analista', '')}")
         st.write(f"**🔍 Nº Análise:** {st.session_state.get('n_analise', '')}")
     
+    # Exibir conclusão
     if conclusao == "FAVORÁVEL":
         st.success(f"✅ **Conclusão final:** {conclusao}")
     else:
         st.error(f"❌ **Conclusão final:** {conclusao}")
     
-    if not dados["protocolo"]:
-        st.error("❌ Protocolo não informado. Volte à etapa 1.")
-    elif not st.session_state.get("analista"):
-        st.error("❌ Analista não informado. Volte à etapa 2.")
-    elif not st.session_state.get("n_analise"):
-        st.error("❌ Número da análise não informado. Volte à etapa 2.")
-    elif not os.path.exists("modelo_parecer.docx"):
-        st.error("❌ Arquivo 'modelo_parecer.docx' não encontrado.")
-    else:
-        if st.button("📄 Gerar Parecer Técnico", use_container_width=True, type="primary"):
-            try:
-                with st.spinner("Gerando parecer técnico... Aguarde."):
-                    arquivo = gerar_docx(dados, respostas, observacoes, conclusao, 
-                                        st.session_state["analista"], st.session_state["matricula_analista"],
-                                        st.session_state["setor"], st.session_state["n_analise"], 
-                                        pendencias_manuais)
-                    salvar_historico(dados, respostas, observacoes, conclusao,
-                                    st.session_state["analista"], st.session_state["n_analise"],
-                                    arquivo, pendencias_manuais)
-                    protocolo_limpo = dados["protocolo"].replace("/", "-")
-                    nome_arquivo = f"PU_{protocolo_limpo}_AN{st.session_state['n_analise']}.docx"
-                    st.success("✅ Parecer gerado e histórico salvo com sucesso!")
-                    st.download_button("⬇️ Baixar parecer (.docx)", data=arquivo, 
-                                      file_name=nome_arquivo, use_container_width=True)
-            except Exception as e:
-                st.error(f"❌ Erro ao gerar o parecer: {str(e)}")
+    # Verificar se há respostas pendentes
+    preenchidas, total, pct = progresso_percentual(respostas)
+    if preenchidas < total:
+        st.warning(f"⚠️ Atenção: {total - preenchidas} perguntas ainda estão pendentes. Revise antes de gerar o parecer.")
     
-    if st.button("← Voltar para revisão", use_container_width=True):
-        st.session_state["etapa"] = "4. Revisão"
-        st.rerun()
+    # Linha divisória
+    st.markdown("---")
+    
+    # Botões lado a lado
+    col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 1])
+    
+    with col_btn1:
+        if st.button("← Voltar para revisão", use_container_width=True):
+            st.session_state["etapa"] = "4. Revisão"
+            st.rerun()
+    
+    with col_btn2:
+        # Botão de gerar parecer (sempre visível)
+        if st.button("📄 Gerar Parecer Técnico", use_container_width=True, type="primary"):
+            # Validações
+            erro = False
+            if not dados["protocolo"]:
+                st.error("❌ Protocolo não informado. Volte à etapa 1.")
+                erro = True
+            elif not st.session_state.get("analista"):
+                st.error("❌ Analista não informado. Volte à etapa 2.")
+                erro = True
+            elif not st.session_state.get("n_analise"):
+                st.error("❌ Número da análise não informado. Volte à etapa 2.")
+                erro = True
+            elif not os.path.exists("modelo_parecer.docx"):
+                st.error("❌ Arquivo 'modelo_parecer.docx' não encontrado.")
+                erro = True
+            
+            if not erro:
+                try:
+                    with st.spinner("Gerando parecer técnico... Aguarde."):
+                        arquivo = gerar_docx(dados, respostas, observacoes, conclusao, 
+                                            st.session_state["analista"], st.session_state["matricula_analista"],
+                                            st.session_state["setor"], st.session_state["n_analise"], 
+                                            pendencias_manuais)
+                        salvar_historico(dados, respostas, observacoes, conclusao,
+                                        st.session_state["analista"], st.session_state["n_analise"],
+                                        arquivo, pendencias_manuais)
+                        protocolo_limpo = dados["protocolo"].replace("/", "-")
+                        nome_arquivo = f"PU_{protocolo_limpo}_AN{st.session_state['n_analise']}.docx"
+                        st.success("✅ Parecer gerado e histórico salvo com sucesso!")
+                        st.download_button("⬇️ Baixar parecer (.docx)", data=arquivo, 
+                                          file_name=nome_arquivo, use_container_width=True)
+                except Exception as e:
+                    st.error(f"❌ Erro ao gerar o parecer: {str(e)}")
+    
+    with col_btn3:
+        # Espaço vazio para manter o layout (opcional)
+        st.write("")
+
