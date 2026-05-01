@@ -12,10 +12,9 @@ st.set_page_config(
 )
 
 # ============================================
-# CARREGAR TEMA (ANTES DE TUDO)
+# CARREGAR TEMA
 # ============================================
 def carregar_tema(caminho="tema.json"):
-    """Carrega o tema do arquivo JSON ou usa valores padrão"""
     tema_padrao = {
         "cores": {
             "primaria": "#0a2a3a",
@@ -136,51 +135,26 @@ def carregar_tema(caminho="tema.json"):
                         else:
                             tema_padrao[key] = tema_custom[key]
         except Exception as e:
-            st.warning(f"Erro ao carregar tema.json: {e}. Usando tema padrão.")
+            st.warning(f"Erro ao carregar tema.json: {e}")
     
     return tema_padrao
 
 tema = carregar_tema()
 
 # ============================================
-# CSS PERSONALIZADO (CARREGADO PRIMEIRO)
+# CSS PERSONALIZADO
 # ============================================
 css_tema = f"""
 <style>
-    /* Fundo principal da aplicação */
-    .stApp {{
-        background: {tema["cores"]["fundo_app"]};
-    }}
+    .stApp {{ background: {tema["cores"]["fundo_app"]}; }}
+    .main > div {{ background-color: {tema["cores"]["fundo_branco"]}; border-radius: 12px; padding: 1rem; }}
     
-    /* Fundo dos containers principais */
-    .main > div {{
-        background-color: {tema["cores"]["fundo_branco"]};
-        border-radius: 12px;
-        padding: 1rem;
-    }}
+    [data-testid="stSidebar"] {{ background: {tema["cores"]["sidebar_fundo"]}; }}
+    [data-testid="stSidebar"] * {{ color: {tema["sidebar"]["texto"]} !important; }}
     
-    /* Sidebar */
-    [data-testid="stSidebar"] {{
-        background: {tema["cores"]["sidebar_fundo"]};
-    }}
+    h1 {{ color: {tema["cores"]["texto_titulo"]} !important; font-weight: 700 !important; font-size: {tema["fontes"]["titulo_principal"]} !important; }}
+    h2, h3, h4 {{ color: {tema["cores"]["primaria"]} !important; font-weight: 600 !important; }}
     
-    [data-testid="stSidebar"] * {{
-        color: {tema["sidebar"]["texto"]} !important;
-    }}
-    
-    /* TÍTULOS */
-    h1 {{
-        color: {tema["cores"]["texto_titulo"]} !important;
-        font-weight: 700 !important;
-        font-size: {tema["fontes"]["titulo_principal"]} !important;
-    }}
-    
-    h2, h3, h4 {{
-        color: {tema["cores"]["primaria"]} !important;
-        font-weight: 600 !important;
-    }}
-    
-    /* INPUTS */
     .stTextInput input, .stTextArea textarea, .stNumberInput input {{
         background-color: {tema["inputs"]["fundo"]} !important;
         color: {tema["inputs"]["texto"]} !important;
@@ -188,18 +162,11 @@ css_tema = f"""
         border-radius: {tema["inputs"]["borda_radius"]} !important;
     }}
     
-    .stTextInput input:focus, .stTextArea textarea:focus, .stNumberInput input:focus {{
-        border-color: {tema["inputs"]["foco_borda"]} !important;
-        box-shadow: {tema["inputs"]["foco_sombra"]} !important;
-    }}
-    
-    /* LABELS */
     .stTextInput label, .stSelectbox label, .stTextArea label, .stNumberInput label {{
         color: {tema["cores"]["primaria"]} !important;
         font-weight: 600 !important;
     }}
     
-    /* SELECT BOX (CAIXA FECHADA) */
     .stSelectbox select {{
         background-color: {tema["select_box"]["fundo"]} !important;
         color: {tema["select_box"]["texto"]} !important;
@@ -208,7 +175,6 @@ css_tema = f"""
         font-size: {tema["select_box"]["fonte_tamanho"]} !important;
     }}
     
-    /* DROPDOWN (JANELA QUE ABRE) */
     div[data-baseweb="menu"] {{
         background-color: {tema["dropdown"]["fundo_janela"]} !important;
         border: 1px solid {tema["dropdown"]["borda_janela"]} !important;
@@ -234,8 +200,6 @@ css_tema = f"""
         color: {tema["dropdown"]["item_selecionado_texto"]} !important;
     }}
     
-    /* ==================== BOTÕES ==================== */
-    /* Estilo para TODOS os botões */
     .stButton > button {{
         border-radius: {tema["botoes"]["borda_radius"]} !important;
         font-weight: {tema["botoes"]["fonte_peso"]} !important;
@@ -245,7 +209,6 @@ css_tema = f"""
         transition: all 0.3s ease !important;
     }}
     
-    /* Botões primary (Entrar, Prosseguir, Gerar) */
     .stButton > button[kind="primary"] {{
         background-color: {tema["botoes"]["primario_fundo"]} !important;
     }}
@@ -253,10 +216,8 @@ css_tema = f"""
     .stButton > button[kind="primary"]:hover {{
         background-color: {tema["botoes"]["primario_fundo_hover"]} !important;
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }}
     
-    /* Botões secundários (Voltar, Sair) */
     .stButton > button:not([kind="primary"]) {{
         background-color: {tema["botoes"]["secundario_fundo"]} !important;
     }}
@@ -264,121 +225,24 @@ css_tema = f"""
     .stButton > button:not([kind="primary"]):hover {{
         background-color: {tema["botoes"]["secundario_fundo_hover"]} !important;
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }}
     
-    /* Força cor do texto em qualquer situação */
-    .stButton > button p {{
-        color: {tema["botoes"]["texto"]} !important;
-    }}
+    .stButton > button p {{ color: {tema["botoes"]["texto"]} !important; }}
     
-    /* PROGRESSO */
-    .progress-wrap {{
-        width: 100%;
-        background: #e9ecef;
-        border-radius: 999px;
-        height: 14px;
-        overflow: hidden;
-        margin: 8px 0;
-    }}
+    .progress-wrap {{ width: 100%; background: #e9ecef; border-radius: 999px; height: 14px; overflow: hidden; margin: 8px 0; }}
+    .progress-bar {{ height: 14px; border-radius: 999px; transition: width 0.3s ease; }}
     
-    .progress-bar {{
-        height: 14px;
-        border-radius: 999px;
-        transition: width 0.3s ease;
-    }}
+    .status-badge-conforme {{ background-color: {tema["status"]["conforme"]["fundo"]}; border-left: 4px solid {tema["status"]["conforme"]["borda"]}; padding: 8px 12px; border-radius: 6px; margin-top: 28px; color: {tema["status"]["conforme"]["texto"]}; font-weight: 600; }}
+    .status-badge-inconforme {{ background-color: {tema["status"]["inconforme"]["fundo"]}; border-left: 4px solid {tema["status"]["inconforme"]["borda"]}; padding: 8px 12px; border-radius: 6px; margin-top: 28px; color: {tema["status"]["inconforme"]["texto"]}; font-weight: 600; }}
+    .status-badge-pendente {{ background-color: {tema["status"]["pendente"]["fundo"]}; border-left: 4px solid {tema["status"]["pendente"]["borda"]}; padding: 8px 12px; border-radius: 6px; margin-top: 28px; color: {tema["status"]["pendente"]["texto"]}; font-weight: 600; }}
+    .status-badge-na {{ background-color: {tema["status"]["nao_se_enquadra"]["fundo"]}; border-left: 4px solid {tema["status"]["nao_se_enquadra"]["borda"]}; padding: 8px 12px; border-radius: 6px; margin-top: 28px; color: {tema["status"]["nao_se_enquadra"]["texto"]}; font-weight: 600; }}
     
-    /* STATUS BADGES */
-    .status-badge-conforme {{
-        background-color: {tema["status"]["conforme"]["fundo"]};
-        border-left: 4px solid {tema["status"]["conforme"]["borda"]};
-        padding: 8px 12px;
-        border-radius: 6px;
-        margin-top: 28px;
-        color: {tema["status"]["conforme"]["texto"]};
-        font-weight: 600;
-    }}
-    
-    .status-badge-inconforme {{
-        background-color: {tema["status"]["inconforme"]["fundo"]};
-        border-left: 4px solid {tema["status"]["inconforme"]["borda"]};
-        padding: 8px 12px;
-        border-radius: 6px;
-        margin-top: 28px;
-        color: {tema["status"]["inconforme"]["texto"]};
-        font-weight: 600;
-    }}
-    
-    .status-badge-pendente {{
-        background-color: {tema["status"]["pendente"]["fundo"]};
-        border-left: 4px solid {tema["status"]["pendente"]["borda"]};
-        padding: 8px 12px;
-        border-radius: 6px;
-        margin-top: 28px;
-        color: {tema["status"]["pendente"]["texto"]};
-        font-weight: 600;
-    }}
-    
-    .status-badge-na {{
-        background-color: {tema["status"]["nao_se_enquadra"]["fundo"]};
-        border-left: 4px solid {tema["status"]["nao_se_enquadra"]["borda"]};
-        padding: 8px 12px;
-        border-radius: 6px;
-        margin-top: 28px;
-        color: {tema["status"]["nao_se_enquadra"]["texto"]};
-        font-weight: 600;
-    }}
-    
-    /* CARDS */
-    .card {{
-        padding: {tema["cards"]["padding"]};
-        border: 1px solid {tema["cards"]["borda"]};
-        border-radius: {tema["cards"]["borda_radius"]};
-        background: {tema["cards"]["fundo"]};
-        margin-bottom: 0.6rem;
-    }}
-    
-    /* MÉTRICAS */
-    [data-testid="stMetric"] {{
-        background-color: {tema["metricas"]["fundo"]};
-        border-radius: {tema["metricas"]["borda_radius"]};
-        padding: {tema["metricas"]["padding"]};
-        border: 1px solid {tema["metricas"]["borda"]};
-    }}
-    
-    [data-testid="stMetric"] label {{
-        color: {tema["metricas"]["label_cor"]} !important;
-        font-weight: {tema["metricas"]["label_peso"]} !important;
-    }}
-    
-    [data-testid="stMetric"] .stMetricValue {{
-        color: {tema["metricas"]["valor_cor"]} !important;
-        font-weight: {tema["metricas"]["valor_peso"]} !important;
-    }}
-    
-    /* EXPANDERS */
-    .streamlit-expanderHeader {{
-        background-color: {tema["expanders"]["header_fundo"]} !important;
-        color: {tema["expanders"]["header_texto"]} !important;
-        font-weight: {tema["expanders"]["header_peso"]} !important;
-        border-radius: {tema["expanders"]["header_borda_radius"]} !important;
-    }}
-    
-    .streamlit-expanderContent {{
-        background-color: {tema["expanders"]["content_fundo"]} !important;
-    }}
-    
-    hr {{
-        border-color: {tema["select_box"]["borda"]} !important;
-    }}
-    
-    p, li, .stMarkdown {{
-        color: {tema["cores"]["texto_secundario"]};
-    }}
+    .card {{ padding: {tema["cards"]["padding"]}; border: 1px solid {tema["cards"]["borda"]}; border-radius: {tema["cards"]["borda_radius"]}; background: {tema["cards"]["fundo"]}; margin-bottom: 0.6rem; }}
+    hr {{ border-color: {tema["select_box"]["borda"]} !important; }}
+    p, li, .stMarkdown {{ color: {tema["cores"]["texto_secundario"]}; }}
 </style>
 """
 
-# CARREGAR CSS PRIMEIRO
 st.markdown(css_tema, unsafe_allow_html=True)
 
 # ============================================
@@ -428,9 +292,7 @@ def carregar_usuarios(caminho="usuarios.txt"):
     if not os.path.exists(caminho):
         st.error("Arquivo usuarios.txt não encontrado.")
         st.stop()
-
     usuarios = {}
-
     with open(caminho, "r", encoding="utf-8") as f:
         for linha in f:
             linha = linha.strip()
@@ -438,22 +300,17 @@ def carregar_usuarios(caminho="usuarios.txt"):
                 continue
             usuario, senha = linha.split(";", 1)
             usuarios[usuario.strip()] = senha.strip()
-
     return usuarios
-
 
 def tela_login():
     st.title("📐 Proanalisis v1.3")
     st.caption("Sistema de análise urbanística e geração de parecer técnico")
-
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         st.markdown("### Acesso ao sistema")
         usuarios = carregar_usuarios()
-
         user = st.text_input("Usuário", key="login_user")
         senha = st.text_input("Senha", type="password", key="login_senha")
-
         if st.button("Entrar", use_container_width=True, key="btn_login", type="primary"):
             if user in usuarios and usuarios[user] == senha:
                 st.session_state["logado"] = True
@@ -461,7 +318,6 @@ def tela_login():
                 st.rerun()
             else:
                 st.error("Usuário ou senha inválidos.")
-
 
 if "logado" not in st.session_state:
     st.session_state["logado"] = False
@@ -475,7 +331,6 @@ if not st.session_state["logado"]:
 # -------------------------
 st.sidebar.title("📐 Proanalisis v1.3")
 st.sidebar.write(f"👤 {st.session_state['usuario']}")
-
 if st.sidebar.button("🚪 Sair", use_container_width=True, key="btn_sair"):
     st.session_state["logado"] = False
     st.session_state.pop("dados_antigos", None)
@@ -492,16 +347,13 @@ def listar_analises(protocolo):
     pasta = get_pasta_protocolo(protocolo)
     if not os.path.exists(pasta):
         return []
-
     arquivos = os.listdir(pasta)
     analises = [f for f in arquivos if f.startswith("AN") and f.endswith(".json")]
-
     def ordem(nome):
         try:
             return int(nome.replace("AN", "").replace(".json", ""))
         except ValueError:
             return 999999
-
     analises.sort(key=ordem)
     return analises
 
@@ -509,7 +361,6 @@ def carregar_ultima_analise(protocolo):
     analises = listar_analises(protocolo)
     if not analises:
         return None
-
     caminho = os.path.join(get_pasta_protocolo(protocolo), analises[-1])
     with open(caminho, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -518,7 +369,6 @@ def sugerir_proxima_analise(protocolo):
     analises = listar_analises(protocolo)
     if not analises:
         return "0"
-
     ultima = analises[-1]
     try:
         numero = int(ultima.replace("AN", "").replace(".json", ""))
@@ -529,9 +379,7 @@ def sugerir_proxima_analise(protocolo):
 def salvar_historico(dados, respostas, observacoes, conclusao, analista, n_analise, arquivo_docx, pendencias_manuais):
     pasta = get_pasta_protocolo(dados["protocolo"])
     os.makedirs(pasta, exist_ok=True)
-
     base = f"AN{n_analise}"
-
     registro = {
         "protocolo": dados["protocolo"],
         "n_analise": n_analise,
@@ -544,10 +392,8 @@ def salvar_historico(dados, respostas, observacoes, conclusao, analista, n_anali
         "pendencias_manuais": pendencias_manuais,
         "conclusao": conclusao
     }
-
     with open(os.path.join(pasta, f"{base}.json"), "w", encoding="utf-8") as f:
         json.dump(registro, f, indent=4, ensure_ascii=False)
-
     with open(os.path.join(pasta, f"{base}.docx"), "wb") as f:
         f.write(arquivo_docx.getvalue())
 
@@ -558,22 +404,17 @@ def carregar_perguntas_txt(caminho="perguntas.txt"):
     if not os.path.exists(caminho):
         st.error("Arquivo perguntas.txt não encontrado.")
         st.stop()
-
     perguntas = []
     bloco = {}
-
     with open(caminho, "r", encoding="utf-8") as f:
         linhas = f.readlines()
-
     for linha in linhas:
         linha = linha.strip()
-
         if not linha:
             if bloco:
                 perguntas.append(bloco)
                 bloco = {}
             continue
-
         if linha.startswith("GRUPO:"):
             bloco["grupo"] = linha.replace("GRUPO:", "").strip()
         elif linha.startswith("ID:"):
@@ -588,17 +429,13 @@ def carregar_perguntas_txt(caminho="perguntas.txt"):
             chave, valor = linha.split(":", 1)
             resposta = chave.replace("REGRA_", "").strip()
             bloco.setdefault("regras", {})[resposta] = {"texto": valor.strip()}
-
     if bloco:
         perguntas.append(bloco)
-
     return perguntas
-
 
 def validar_ids_repetidos(perguntas):
     ids = [p.get("id", "").strip() for p in perguntas if p.get("id", "").strip()]
     return sorted({i for i in ids if ids.count(i) > 1})
-
 
 perguntas = carregar_perguntas_txt("perguntas.txt")
 ids_repetidos = validar_ids_repetidos(perguntas)
@@ -620,7 +457,6 @@ def definir_conclusao(respostas, pendencias_manuais=None):
         conformes = p.get("conformes", ["Sim", "Não se enquadra"])
         if resposta not in conformes and resposta in p.get("regras", {}):
             return "DESFAVORÁVEL"
-    
     if pendencias_manuais:
         for grupo, pendencias in pendencias_manuais.items():
             if isinstance(pendencias, list):
@@ -629,7 +465,6 @@ def definir_conclusao(respostas, pendencias_manuais=None):
                         return "DESFAVORÁVEL"
             elif pendencias and pendencias.strip():
                 return "DESFAVORÁVEL"
-    
     return "FAVORÁVEL"
 
 def montar_inconformidades_por_grupo(respostas, observacoes, pendencias_manuais=None):
@@ -647,7 +482,6 @@ def montar_inconformidades_por_grupo(respostas, observacoes, pendencias_manuais=
             if obs:
                 texto += f"\nObservação: {obs}"
             grupos.setdefault(grupo, []).append(texto)
-    
     if pendencias_manuais:
         for grupo, pendencias in pendencias_manuais.items():
             if isinstance(pendencias, list):
@@ -774,6 +608,10 @@ def inicializar_estados():
         st.session_state["n_analise"] = ""
     if "pendencias_manuais" not in st.session_state:
         st.session_state["pendencias_manuais"] = {}
+    if "respostas_temp" not in st.session_state:
+        st.session_state["respostas_temp"] = {}
+    if "observacoes_temp" not in st.session_state:
+        st.session_state["observacoes_temp"] = {}
 
 inicializar_estados()
 
@@ -789,31 +627,22 @@ if etapa_atual != st.session_state["etapa"]:
     st.session_state["etapa"] = etapa_atual
     st.rerun()
 
-# ==================== ETAPAS DO SISTEMA ====================
-
-# ETAPA 1 - PROTOCOLO
+# ==================== ETAPA 1 - PROTOCOLO ====================
 if st.session_state["etapa"] == "1. Protocolo":
     st.header("📋 Dados do protocolo")
-    protocolo = st.text_input("N° Protocolo", value=st.session_state["protocolo"], key="protocolo_input")
-    if protocolo != st.session_state["protocolo"]:
-        st.session_state["protocolo"] = protocolo
-    st.subheader("🏢 Dados do empreendimento")
-    tipo = st.selectbox("Tipo do Empreendimento", ["Loteamento", "Condomínio fechado de lotes"], 
-                        index=0 if st.session_state["tipo"] == "Loteamento" else 1, key="tipo_select")
-    st.session_state["tipo"] = tipo
-    interessado = st.text_input("Requerente", value=st.session_state["interessado"], key="interessado_input")
-    st.session_state["interessado"] = interessado
-    n_lotes = st.number_input("Número de Lotes", min_value=1, value=st.session_state["n_lotes"], key="n_lotes_input")
-    st.session_state["n_lotes"] = n_lotes
-    matriculas = st.text_area("Matrícula(s) do Empreendimento", value=st.session_state["matriculas"], 
-                               key="matriculas_input", placeholder="Digite a(s) matrícula(s) separadas por vírgula")
-    st.session_state["matriculas"] = matriculas
-    st.markdown("---")
+    c1, c2 = st.columns([2, 1])
+    with c1:
+        protocolo = st.text_input("N° Protocolo", value=st.session_state["protocolo"], key="protocolo_input")
+        if protocolo != st.session_state["protocolo"]:
+            st.session_state["protocolo"] = protocolo
+    with c2:
+        st.markdown("<div class='small-muted'>Use o mesmo protocolo para continuar uma análise já existente.</div>", unsafe_allow_html=True)
+
     if st.session_state["protocolo"]:
         ultima = carregar_ultima_analise(st.session_state["protocolo"])
         if ultima:
             st.info(f"📋 Última análise encontrada: AN{ultima['n_analise']}")
-            col_a, col_b = st.columns(2)
+            col_a, col_b = st.columns([1, 1])
             with col_a:
                 if st.button("▶️ Continuar análise", use_container_width=True):
                     st.session_state["dados_antigos"] = ultima
@@ -839,22 +668,37 @@ if st.session_state["etapa"] == "1. Protocolo":
     else:
         st.warning("⚠️ Informe o número do protocolo para continuar.")
 
-# ETAPA 2 - ANALISTA
+    st.subheader("🏢 Dados do empreendimento")
+    tipo = st.selectbox("Tipo do Empreendimento", ["Loteamento", "Condomínio fechado de lotes"], 
+                        index=0 if st.session_state["tipo"] == "Loteamento" else 1, key="tipo_select")
+    st.session_state["tipo"] = tipo
+    interessado = st.text_input("Requerente", value=st.session_state["interessado"], key="interessado_input")
+    st.session_state["interessado"] = interessado
+    n_lotes = st.number_input("Número de Lotes", min_value=1, value=st.session_state["n_lotes"], key="n_lotes_input")
+    st.session_state["n_lotes"] = n_lotes
+    matriculas = st.text_area("Matrícula(s) do Empreendimento", value=st.session_state["matriculas"], 
+                               key="matriculas_input", placeholder="Digite a(s) matrícula(s) separadas por vírgula")
+    st.session_state["matriculas"] = matriculas
+
+# ==================== ETAPA 2 - ANALISTA ====================
 elif st.session_state["etapa"] == "2. Analista":
     st.header("👤 Dados do analista")
-    st.info(f"📌 Protocolo: **{st.session_state['protocolo']}**")
-    analista = st.text_input("Nome do Analista", value=st.session_state["analista"], key="analista_input")
-    st.session_state["analista"] = analista
-    matricula_analista = st.text_input("Matrícula do Analista", value=st.session_state["matricula_analista"], key="matricula_analista_input")
-    st.session_state["matricula_analista"] = matricula_analista
-    setor = st.text_input("Setor", value=st.session_state["setor"], key="setor_input")
-    st.session_state["setor"] = setor
-    n_analise_sugerida = sugerir_proxima_analise(st.session_state["protocolo"]) if st.session_state["protocolo"] else "1"
-    if not st.session_state["n_analise"]:
-        st.session_state["n_analise"] = n_analise_sugerida
-    n_analise = st.text_input("Nº da Análise", value=st.session_state["n_analise"], key="n_analise_input")
-    st.session_state["n_analise"] = n_analise
-    col1, col2 = st.columns(2)
+    st.info(f"📌 Protocolo: **{st.session_state['protocolo']}** | Empreendimento: **{st.session_state['interessado']}**")
+    c1, c2 = st.columns(2)
+    with c1:
+        analista = st.text_input("Nome do Analista", value=st.session_state["analista"], key="analista_input")
+        st.session_state["analista"] = analista
+        matricula_analista = st.text_input("Matrícula do Analista", value=st.session_state["matricula_analista"], key="matricula_analista_input")
+        st.session_state["matricula_analista"] = matricula_analista
+    with c2:
+        setor = st.text_input("Setor", value=st.session_state["setor"], key="setor_input")
+        st.session_state["setor"] = setor
+        n_analise_sugerida = sugerir_proxima_analise(st.session_state["protocolo"]) if st.session_state["protocolo"] else "1"
+        if not st.session_state["n_analise"]:
+            st.session_state["n_analise"] = n_analise_sugerida
+        n_analise = st.text_input("Nº da Análise", value=st.session_state["n_analise"], key="n_analise_input")
+        st.session_state["n_analise"] = n_analise
+    col1, col2 = st.columns([1, 1])
     with col1:
         if st.button("← Voltar", use_container_width=True):
             st.session_state["etapa"] = "1. Protocolo"
@@ -867,107 +711,230 @@ elif st.session_state["etapa"] == "2. Analista":
             else:
                 st.error("⚠️ Preencha todos os campos")
 
-# ETAPA 3 - ANÁLISE
+# ==================== ETAPA 3 - ANÁLISE ====================
 elif st.session_state["etapa"] == "3. Análise":
     st.header("🔍 Análise técnica")
-    st.info(f"📌 Protocolo: **{st.session_state['protocolo']}** | Analista: **{st.session_state['analista']}**")
-    respostas = {}
-    observacoes = {}
-    pendencias_manuais = st.session_state.get("pendencias_manuais", {})
+    st.info(f"📌 Protocolo: **{st.session_state['protocolo']}** | Analista: **{st.session_state['analista']}** | Análise Nº: **{st.session_state['n_analise']}**")
+
+    # Recuperar respostas salvas ou inicializar
+    if "respostas_analise" not in st.session_state:
+        st.session_state["respostas_analise"] = st.session_state.get("respostas_temp", {})
+    if "observacoes_analise" not in st.session_state:
+        st.session_state["observacoes_analise"] = st.session_state.get("observacoes_temp", {})
+    if "pendencias_analise" not in st.session_state:
+        st.session_state["pendencias_analise"] = st.session_state.get("pendencias_manuais", {})
+
+    respostas = st.session_state["respostas_analise"]
+    observacoes = st.session_state["observacoes_analise"]
+    pendencias_manuais = st.session_state["pendencias_analise"]
+    
+    # ORDEM CORRETA DOS GRUPOS
+    ordem_grupos = ["Pré-análise", "Documental", "Viabilidades", "Análise Urbanística", "Análise Geo", "Documentos Finais"]
+    grupos_existentes = list(set(p["grupo"] for p in perguntas))
+    grupos_ordenados = [g for g in ordem_grupos if g in grupos_existentes]
+    
     inconformes_sidebar = []
-    for grupo in sorted(set(p["grupo"] for p in perguntas)):
+
+    for grupo in grupos_ordenados:
+        perguntas_grupo = [p for p in perguntas if p["grupo"] == grupo]
         with st.expander(f"📁 {grupo}", expanded=False):
-            for p in [p for p in perguntas if p["grupo"] == grupo]:
+            for idx, p in enumerate(perguntas_grupo):
                 pid = p["id"]
                 chave_resp = f"resp_{pid}"
                 chave_obs = f"obs_{pid}"
-                if chave_resp not in st.session_state:
-                    valor_padrao = st.session_state["dados_antigos"]["respostas"].get(pid) if st.session_state["dados_antigos"] else "Selecione..."
-                    st.session_state[chave_resp] = valor_padrao if valor_padrao in p["opcoes"] else "Selecione..."
-                if chave_obs not in st.session_state:
-                    st.session_state[chave_obs] = st.session_state["dados_antigos"]["observacoes"].get(pid, "") if st.session_state["dados_antigos"] else ""
+                
+                # Carregar valores salvos
+                valor_salvo = respostas.get(pid, "Selecione...")
+                obs_salva = observacoes.get(pid, "")
+                
+                # Verificar se tem valor do histórico
+                if st.session_state["dados_antigos"] and pid not in respostas:
+                    valor_salvo = st.session_state["dados_antigos"]["respostas"].get(pid, "Selecione...")
+                    if valor_salvo not in p["opcoes"] and valor_salvo != "Selecione...":
+                        valor_salvo = "Selecione..."
+                    obs_salva = st.session_state["dados_antigos"]["observacoes"].get(pid, "")
+                
                 opcoes = ["Selecione..."] + p["opcoes"]
-                col1, col2 = st.columns([3, 1])
-                with col1:
-                    resposta = st.selectbox(p["pergunta"], opcoes, key=chave_resp)
+                idx_padrao = opcoes.index(valor_salvo) if valor_salvo in opcoes else 0
+                
+                col_pergunta, col_status = st.columns([3, 1])
+                with col_pergunta:
+                    resposta = st.selectbox(p["pergunta"], opcoes, index=idx_padrao, key=chave_resp, help=f"ID: {pid}")
                     respostas[pid] = resposta
-                with col2:
+                with col_status:
                     status = resumo_status_pergunta(p, resposta)
                     render_status_badge(status)
                     if status == "inconforme":
                         inconformes_sidebar.append(p["pergunta"])
-                obs = st.text_area("Observação", key=chave_obs, height=68, placeholder="Registre detalhes adicionais...")
+                
+                obs = st.text_area("📝 Observação (opcional)", value=obs_salva, key=chave_obs, height=68,
+                                   placeholder="Registre detalhes adicionais sobre esta resposta...")
                 observacoes[pid] = obs
                 st.markdown("---")
+            
+            # Inconformidades Diversas
             st.markdown("### 📝 Inconformidades Diversas")
+            st.caption("Registre aqui quaisquer inconformidades adicionais não cobertas pelas perguntas acima")
+            
             if grupo not in pendencias_manuais:
                 pendencias_manuais[grupo] = []
+            elif not isinstance(pendencias_manuais[grupo], list):
+                if pendencias_manuais[grupo] and pendencias_manuais[grupo].strip():
+                    pendencias_manuais[grupo] = [pendencias_manuais[grupo]]
+                else:
+                    pendencias_manuais[grupo] = []
+            
+            # Exibir inconformidades existentes
             if pendencias_manuais[grupo]:
                 for i, pendencia in enumerate(pendencias_manuais[grupo]):
-                    if pendencia:
-                        col_p, col_b = st.columns([10, 1])
-                        with col_p:
-                            st.markdown(f"📌 {pendencia}")
-                        with col_b:
-                            if st.button("🗑️", key=f"del_{grupo}_{i}"):
+                    if pendencia and pendencia.strip():
+                        col_pend, col_btn = st.columns([10, 1])
+                        with col_pend:
+                            st.markdown(f"""
+                            <div style="background-color: #fff3e0; border-left: 4px solid #ff9800; 
+                                        padding: 10px; margin: 5px 0; border-radius: 5px;">
+                                <strong>Inconformidade {i+1}:</strong> {pendencia}
+                            </div>
+                            """, unsafe_allow_html=True)
+                        with col_btn:
+                            if st.button("🗑️", key=f"remove_{grupo}_{i}"):
                                 pendencias_manuais[grupo].pop(i)
                                 st.rerun()
-            if st.button(f"+ Adicionar", key=f"add_{grupo}"):
+            
+            # Botão adicionar
+            if st.button(f"+ Adicionar Inconformidade Diversa", key=f"add_{grupo}", use_container_width=True):
                 pendencias_manuais[grupo].append("")
                 st.rerun()
+            
+            # Campo para nova inconformidade
             if pendencias_manuais[grupo] and not pendencias_manuais[grupo][-1]:
-                nova = st.text_area("Nova inconformidade", key=f"new_{grupo}", height=68)
-                if nova:
+                nova = st.text_area("Nova inconformidade", key=f"new_{grupo}", height=80,
+                                    placeholder="Descreva a inconformidade encontrada...")
+                if nova and nova.strip():
                     pendencias_manuais[grupo][-1] = nova
                     st.rerun()
+            
+            for pendencia in pendencias_manuais[grupo]:
+                if pendencia and pendencia.strip():
+                    inconformes_sidebar.append(f"{grupo} - Inconformidade Diversa")
+            
             st.markdown("---")
-    st.session_state["pendencias_manuais"] = pendencias_manuais
+    
+    # Salvar estados
+    st.session_state["respostas_analise"] = respostas
+    st.session_state["observacoes_analise"] = observacoes
+    st.session_state["pendencias_analise"] = pendencias_manuais
+    
     preenchidas, total, pct = progresso_percentual(respostas)
     render_progresso(preenchidas, total, pct, st)
-    col1, col2 = st.columns(2)
+    
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 📊 Progresso")
+    render_progresso(preenchidas, total, pct, st.sidebar)
+    st.sidebar.markdown("### ⚠️ Inconformidades")
+    if inconformes_sidebar:
+        for item in inconformes_sidebar[:20]:
+            st.sidebar.write(f"- {item}")
+    else:
+        st.sidebar.write("Nenhuma até o momento.")
+    
+    col1, col2 = st.columns([1, 1])
     with col1:
         if st.button("← Voltar", use_container_width=True):
             st.session_state["etapa"] = "2. Analista"
             st.rerun()
     with col2:
-        if st.button("Prosseguir →", use_container_width=True, type="primary"):
+        if st.button("Prosseguir para revisão →", use_container_width=True, type="primary"):
             st.session_state["respostas_temp"] = respostas
             st.session_state["observacoes_temp"] = observacoes
+            st.session_state["pendencias_manuais"] = pendencias_manuais
             st.session_state["etapa"] = "4. Revisão"
             st.rerun()
 
-# ETAPA 4 - REVISÃO
+# ==================== ETAPA 4 - REVISÃO ====================
 elif st.session_state["etapa"] == "4. Revisão":
     st.header("📋 Revisão da análise")
+    
     respostas = st.session_state.get("respostas_temp", {})
     observacoes = st.session_state.get("observacoes_temp", {})
     pendencias_manuais = st.session_state.get("pendencias_manuais", {})
+    
     preenchidas, total, pct = progresso_percentual(respostas)
     render_progresso(preenchidas, total, pct, st)
+    
     conclusao = definir_conclusao(respostas, pendencias_manuais)
-    st.subheader("📌 Resumo")
-    st.write(f"**Protocolo:** {st.session_state['protocolo']}")
-    st.write(f"**Requerente:** {st.session_state['interessado']}")
-    if conclusao == "FAVORÁVEL":
-        st.success(f"✅ Conclusão: {conclusao}")
-    else:
-        st.error(f"❌ Conclusão: {conclusao}")
-    col1, col2 = st.columns(2)
+    grupos_inconformes = montar_inconformidades_por_grupo(respostas, observacoes, pendencias_manuais)
+    
+    col1, col2 = st.columns([1.4, 1])
     with col1:
-        if st.button("← Voltar", use_container_width=True):
+        st.subheader("📌 Resumo geral")
+        st.write(f"**Protocolo:** {st.session_state.get('protocolo', '')}")
+        st.write(f"**Requerente:** {st.session_state.get('interessado', '')}")
+        st.write(f"**Tipo:** {st.session_state.get('tipo', '')}")
+        st.write(f"**Matrícula(s):** {st.session_state.get('matriculas', '')}")
+        st.write(f"**Analista:** {st.session_state.get('analista', '')}")
+        st.write(f"**Nº da análise:** {st.session_state.get('n_analise', '')}")
+        if conclusao == "FAVORÁVEL":
+            st.success(f"✅ **Conclusão preliminar:** {conclusao}")
+        else:
+            st.error(f"❌ **Conclusão preliminar:** {conclusao}")
+    
+    with col2:
+        st.subheader("📊 Contagem")
+        total_inconformes = sum(len(v) for v in grupos_inconformes.values())
+        st.metric("Perguntas", len(perguntas))
+        st.metric("Respondidas", preenchidas)
+        st.metric("Inconformidades", total_inconformes)
+    
+    st.subheader("⚠️ Inconformidades identificadas")
+    if grupos_inconformes:
+        for grupo, itens in grupos_inconformes.items():
+            st.markdown(f"#### {grupo}")
+            for i, item in enumerate(itens, start=1):
+                st.markdown(f"""
+                <div style="background-color: {tema['cards']['fundo']}; border: 1px solid {tema['cards']['borda']}; 
+                            border-radius: {tema['cards']['borda_radius']}; padding: {tema['cards']['padding']}; margin: 8px 0;">
+                    <b style="color: {tema['cards']['texto_destaque']};">{i}.</b> 
+                    <span style="color: {tema['cards']['texto']};">{item.replace(chr(10), '<br>')}</span>
+                </div>
+                """, unsafe_allow_html=True)
+    else:
+        st.success("✅ Não foram identificadas inconformidades.")
+    
+    if st.session_state.get("dados_antigos"):
+        st.subheader("🔄 Alterações em relação à análise anterior")
+        houve_alteracao = False
+        dados_antigos = st.session_state["dados_antigos"]
+        for p in perguntas:
+            pid = p["id"]
+            antiga = dados_antigos["respostas"].get(pid)
+            atual = respostas.get(pid)
+            obs_antiga = dados_antigos["observacoes"].get(pid, "").strip()
+            obs_atual = observacoes.get(pid, "").strip()
+            if antiga != atual or obs_antiga != obs_atual:
+                houve_alteracao = True
+                st.warning(f"**{pid}:** resposta '{antiga}' → '{atual}' | observação '{obs_antiga}' → '{obs_atual}'")
+        if not houve_alteracao:
+            st.success("✅ Nenhuma alteração identificada em relação à análise carregada.")
+    
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        if st.button("← Voltar para análise", use_container_width=True):
             st.session_state["etapa"] = "3. Análise"
             st.rerun()
     with col2:
-        if st.button("Gerar Parecer →", use_container_width=True, type="primary"):
+        if st.button("Prosseguir para geração →", use_container_width=True, type="primary"):
             st.session_state["etapa"] = "5. Gerar parecer"
             st.rerun()
 
-# ETAPA 5 - GERAR PARECER
+# ==================== ETAPA 5 - GERAR PARECER ====================
 elif st.session_state["etapa"] == "5. Gerar parecer":
     st.header("📄 Geração do parecer")
+    
     respostas = st.session_state.get("respostas_temp", {})
     observacoes = st.session_state.get("observacoes_temp", {})
     pendencias_manuais = st.session_state.get("pendencias_manuais", {})
+    
     dados = {
         "protocolo": st.session_state.get("protocolo", ""),
         "tipo": st.session_state.get("tipo", ""),
@@ -975,19 +942,39 @@ elif st.session_state["etapa"] == "5. Gerar parecer":
         "n_lotes": st.session_state.get("n_lotes", 1),
         "matriculas": st.session_state.get("matriculas", "")
     }
+    
     conclusao = definir_conclusao(respostas, pendencias_manuais)
-    st.write(f"**Protocolo:** {dados['protocolo']}")
-    st.write(f"**Conclusão:** {conclusao}")
-    if st.button("📄 Gerar Parecer Técnico", use_container_width=True, type="primary"):
-        if not dados["protocolo"]:
-            st.error("Protocolo não informado")
-        elif not st.session_state.get("analista"):
-            st.error("Analista não informado")
-        elif not os.path.exists("modelo_parecer.docx"):
-            st.error("Arquivo modelo_parecer.docx não encontrado")
-        else:
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write(f"**📌 Protocolo:** {dados['protocolo']}")
+        st.write(f"**👤 Requerente:** {dados['interessado']}")
+        st.write(f"**🏢 Tipo:** {dados['tipo']}")
+        st.write(f"**📋 Matrícula(s):** {dados['matriculas']}")
+    with col2:
+        st.write(f"**🔢 Nº Lotes:** {dados['n_lotes']}")
+        st.write(f"**👨‍💼 Analista:** {st.session_state.get('analista', '')}")
+        st.write(f"**🔢 Matrícula Analista:** {st.session_state.get('matricula_analista', '')}")
+        st.write(f"**🔍 Nº Análise:** {st.session_state.get('n_analise', '')}")
+    
+    if conclusao == "FAVORÁVEL":
+        st.success(f"✅ **Conclusão final:** {conclusao}")
+    else:
+        st.error(f"❌ **Conclusão final:** {conclusao}")
+    
+    # Validações
+    if not dados["protocolo"]:
+        st.error("❌ Protocolo não informado. Volte à etapa 1.")
+    elif not st.session_state.get("analista"):
+        st.error("❌ Analista não informado. Volte à etapa 2.")
+    elif not st.session_state.get("n_analise"):
+        st.error("❌ Número da análise não informado. Volte à etapa 2.")
+    elif not os.path.exists("modelo_parecer.docx"):
+        st.error("❌ Arquivo 'modelo_parecer.docx' não encontrado.")
+    else:
+        if st.button("📄 Gerar Parecer Técnico", use_container_width=True, type="primary"):
             try:
-                with st.spinner("Gerando parecer..."):
+                with st.spinner("Gerando parecer técnico... Aguarde."):
                     arquivo = gerar_docx(dados, respostas, observacoes, conclusao, 
                                         st.session_state["analista"], st.session_state["matricula_analista"],
                                         st.session_state["setor"], st.session_state["n_analise"], 
@@ -995,11 +982,14 @@ elif st.session_state["etapa"] == "5. Gerar parecer":
                     salvar_historico(dados, respostas, observacoes, conclusao,
                                     st.session_state["analista"], st.session_state["n_analise"],
                                     arquivo, pendencias_manuais)
-                    nome = f"PU_{dados['protocolo'].replace('/', '-')}_AN{st.session_state['n_analise']}.docx"
-                    st.success("✅ Parecer gerado!")
-                    st.download_button("⬇️ Baixar", data=arquivo, file_name=nome, use_container_width=True)
+                    protocolo_limpo = dados["protocolo"].replace("/", "-")
+                    nome_arquivo = f"PU_{protocolo_limpo}_AN{st.session_state['n_analise']}.docx"
+                    st.success("✅ Parecer gerado e histórico salvo com sucesso!")
+                    st.download_button("⬇️ Baixar parecer (.docx)", data=arquivo, 
+                                      file_name=nome_arquivo, use_container_width=True)
             except Exception as e:
-                st.error(f"Erro: {e}")
-    if st.button("← Voltar", use_container_width=True):
+                st.error(f"❌ Erro ao gerar o parecer: {str(e)}")
+    
+    if st.button("← Voltar para revisão", use_container_width=True):
         st.session_state["etapa"] = "4. Revisão"
         st.rerun()
