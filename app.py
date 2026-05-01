@@ -305,7 +305,7 @@ def carregar_usuarios(caminho="usuarios.txt"):
 def tela_login():
 
 # Carregar logo
-    if os.path.exists("logo.png"):
+if os.path.exists("logo.png"):
     st.image("logo.png", width=150)  # Ajuste o tamanho conforme necessário
    
     st.title("📐 Proanalise v1.61")
