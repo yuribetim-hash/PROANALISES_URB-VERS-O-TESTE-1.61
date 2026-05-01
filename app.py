@@ -747,7 +747,7 @@ for p in perguntas:
     grupo = p["grupo"]
     if grupo not in grupos_ordenados:
         grupos_ordenados.append(grupo)
-}
+)
 # ==================== ETAPA 4 - REVISÃO ====================
 elif st.session_state["etapa"] == "4. Revisão":
     st.header("📋 Revisão da análise")
