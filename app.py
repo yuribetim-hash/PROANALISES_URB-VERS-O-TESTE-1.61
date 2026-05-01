@@ -770,24 +770,22 @@ elif st.session_state["etapa"] == "3. Análise":
     observacoes = st.session_state["observacoes_analise"]
     pendencias_manuais = st.session_state["pendencias_analise"]
     
-    # ORDEM DESEJADA DOS GRUPOS
-    ordem_desejada = ["Pré-análise", "Documental", "Viabilidades", "Análise Urbanística", "Análise Geo", "Documentos Finais"]
+    # ORDEM CORRETA DOS GRUPOS (fixa)
+    ordem_grupos = ["Pré-análise", "Documental", "Viabilidades", "Análise Urbanística", "Análise Geo", "Documentos Finais"]
     
-    # Obter grupos únicos do arquivo de perguntas
+    # Criar dicionário para mapear ordem
+    ordem_map = {nome: i for i, nome in enumerate(ordem_grupos)}
+    
+    # Ordenar os grupos disponíveis baseado na ordem definida
     grupos_disponiveis = list(set(p["grupo"] for p in perguntas))
-    
-    # Criar lista ordenada
-    grupos_ordenados = []
-    for grupo in ordem_desejada:
-        if grupo in grupos_disponiveis:
-            grupos_ordenados.append(grupo)
-    for grupo in grupos_disponiveis:
-        if grupo not in grupos_ordenados:
-            grupos_ordenados.append(grupo)
+    grupos_ordenados = sorted(grupos_disponiveis, key=lambda x: ordem_map.get(x, 999))
     
     if not grupos_ordenados:
         st.error("Nenhum grupo de perguntas encontrado. Verifique o arquivo perguntas.txt")
         st.stop()
+    
+    # DEBUG: Mostrar a ordem que está sendo usada (remover depois se quiser)
+    # st.write("Ordem dos grupos:", grupos_ordenados)
     
     inconformes_sidebar = []
 
